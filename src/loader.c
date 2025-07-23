@@ -7,11 +7,7 @@
 
 #include <stdio.h>
 #include "board.h"
-#include "hpm_debug_console.h"
-#include "hpm_pcfg_drv.h"
 #include "hpm_clock_drv.h"
-#include "hpm_uart_drv.h"
-#include "hpm_pllctlv2_drv.h"
 #include "pinmux.h"
 
 #define LED_FLASH_PERIOD_IN_MS 300
@@ -44,6 +40,10 @@ static void loader_pre_init_console_clock(void)
 int main(void)
 {
     board_init_clock();
+
+#ifdef HPMSOC_HAS_HPMSDK_PLLCTL
+    sysctl_set_cpu0_lp_mode(HPM_SYSCTL, cpu_lp_mode_ungate_cpu_clock);
+#endif
 
     loader_pre_init_console_clock();
 
